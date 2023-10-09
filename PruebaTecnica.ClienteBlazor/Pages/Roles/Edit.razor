@@ -1,0 +1,36 @@
+﻿@page "/rol/edit/{id:int}"
+
+@using PruebaTecnica.ClienteBlazor.Models;
+@inject HttpClient Http;
+@inject NavigationManager Navigation;
+
+<h3>Modificar Rol</h3>
+
+<EditForm Model="@_rol" OnValidSubmit="Put">
+    <div>
+        <MudTextField @bind-Value="_rol.Nombre" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
+    </div>
+    <br />
+    <div class="form-group">
+        <input type="submit" class="btn btn-success" value="Guardar" />
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Rol _rol = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rol = await Http.GetFromJsonAsync<Rol>($"/api/Rol/Buscar/{Id}");
+    }
+
+
+    private async Task Put()
+    {
+        await Http.PutAsJsonAsync<Rol>($"/api/Rol/Editar/{_rol.Id}", _rol);
+        Navigation.NavigateTo("/roles");
+    }
+}

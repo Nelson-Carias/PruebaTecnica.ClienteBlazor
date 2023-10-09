@@ -1,0 +1,32 @@
+﻿@page "/rol/create"
+
+@using PruebaTecnica.ClienteBlazor.Models;
+@inject HttpClient Http;
+@inject NavigationManager Navigation;
+
+<h3>Nuevo Rol</h3>
+
+<EditForm Model="@_rol" OnValidSubmit="Post">
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+        <div>
+            <MudTextField @bind-Value="_rol.Nombre" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="submit" class="btn btn-success" value="Guardar" />
+        </div>
+        </MudItem>
+    </MudGrid>
+    
+</EditForm>
+
+@code {
+    private Rol _rol = new();
+
+    private async Task Post()
+    {
+        await Http.PostAsJsonAsync<Rol>("/api/Rol/Guardar/", _rol);
+        Navigation.NavigateTo("/roles");
+    }
+}

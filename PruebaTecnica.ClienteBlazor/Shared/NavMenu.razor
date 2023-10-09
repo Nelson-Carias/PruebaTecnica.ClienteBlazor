@@ -1,0 +1,8 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization;
+
+<MudNavMenu>
+    <MudNavLink Icon="@Icons.Material.Filled.Home" IconColor="@Color.Inherit" Href="/index" Match="NavLinkMatch.All">Home</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.People" IconColor="@Color.Inherit" Href="/usuarios" Match="NavLinkMatch.Prefix">Usuarios</MudNavLink> 
+    <MudNavLink Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="@Color.Inherit" Href="/roles" Match="NavLinkMatch.Prefix">Roles</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.DirectionsCar" IconColor="@Color.Inherit" Href="/vehiculos" Match="NavLinkMatch.Prefix">Vehiculos</MudNavLink>
+</MudNavMenu>

@@ -1,0 +1,78 @@
+﻿@page "/roles"
+
+@using PruebaTecnica.ClienteBlazor.Models;
+@using PruebaTecnica.ClienteBlazor.Services;
+
+@inject HttpClient Http;
+@inject NavigationManager Navigation;
+@inject IRolService RolService;
+
+<h3>Roles</h3>
+
+<div>
+    <a class="btn btn-success btn-sm mb-3" @onclick="Crear">Nuevo Rol</a>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if(_rol == null)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var rol in _rol)
+            {
+                <tr>
+                    <td>@rol.Id</td>
+                    <td>@rol.Nombre</td>
+                    <td>
+                    <button class="btn btn-primary btn-sm" @onclick="(() => Editar(rol.Id))"><i class="oi oi-pencil"></i></button>
+                    <button class="btn btn-danger btn-sm ms-2" @onclick="(() => Eliminar(rol.Id))"> <i class="oi oi-trash"></i></button>
+                    </td>
+                </tr>
+            
+            }
+        }
+        
+    </tbody>
+</table>
+
+
+
+@code {
+    private List<Rol> _rol;
+    protected override async Task OnInitializedAsync()
+    {
+        _rol = await Http.GetFromJsonAsync<List<Rol>>("/api/Rol/Lista");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        await Http.DeleteAsync($"/api/Rol/Eliminar/{id}");
+        _rol = await Http.GetFromJsonAsync<List<Rol>>("/api/Rol/Lista");
+        StateHasChanged();
+    }
+
+    private void Editar(int id)
+    {
+        Navigation.NavigateTo($"/rol/edit/{id}");
+    }
+
+    private void Crear()
+    {
+        Navigation.NavigateTo("/rol/create/");
+    }
+}

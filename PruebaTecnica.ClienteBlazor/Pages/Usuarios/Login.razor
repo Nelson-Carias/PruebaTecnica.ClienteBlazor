@@ -1,0 +1,71 @@
+﻿@page "/"
+
+@layout LoginLayaout
+
+@using PruebaTecnica.ClienteBlazor.Models;
+@using PruebaTecnica.ClienteBlazor.Services;
+@using PruebaTecnica.ClienteBlazor.Extensiones;
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject IUsuarioService UsuarioService;
+@inject HttpClient Http;
+@inject AuthenticationStateProvider autenticacionProvider;
+@inject NavigationManager Navigation;
+
+
+
+
+<div class="container pa-12" >
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block" >
+                            <img height="100%" width="100%" src="https://us.123rf.com/450wm/rashadashurov/rashadashurov1911/rashadashurov191101490/133749415-account-concept-blue-line-icon-simple-thin-element-on-dark-background-account-concept-outline.jpg?ver=6" class="card-img-top"  />
+                        </div>
+                        <div class="col-lg-6 justify-content-center pa-12">
+
+                            <div class="mb-3 text-center">
+                                <h3>LOGIN</h3>
+                            </div>
+                            <br />
+                            <div class="mb-3 col-md-11">
+                                <label>Correo Electronico:</label>
+                                <MudTextField  @bind-Value="login.CorreoElectronico"  Variant="Variant.Outlined" />
+                            </div>
+
+                            <div class="mb-3 col-md-11">
+                                <label>Contraseña:</label>
+                                <MudTextField  @bind-Value="login.Password" Variant="Variant.Outlined" />
+                            </div>
+                            <br />
+                            <div>
+                                <button @onclick="IniciarSesion" class="btn btn-primary">Iniciar sesion</button>
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        
+
+@code {
+
+    private Usuario login = new Usuario();
+
+    private async Task IniciarSesion()
+    {
+        var loginResponse = await Http.PostAsJsonAsync<Usuario>("/api/Usuario/Login", login);
+        if (loginResponse.IsSuccessStatusCode)
+        {
+ 
+
+            Navigation.NavigateTo("/index");
+        }
+    }
+}

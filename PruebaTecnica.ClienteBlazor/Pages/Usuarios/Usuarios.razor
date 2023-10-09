@@ -1,0 +1,85 @@
+﻿@page "/usuarios"
+
+@using PruebaTecnica.ClienteBlazor.Models;
+@using PruebaTecnica.ClienteBlazor.Services;
+
+@inject HttpClient Http;
+@inject NavigationManager Navigation;
+@inject IUsuarioService UsuarioService;
+@inject IRolService RolService;
+
+<h3>Usuarios</h3>
+
+<div>
+    <a class="btn btn-success btn-sm mb-3" @onclick="Crear">Nuevo Usuario</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Rol</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Correo Electronico</th>
+            <th>Fecha Registro</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if(_usuario == null)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var usuario in _usuario)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.IdRol</td>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Apellido</td>
+                    <td>@usuario.CorreoElectronico</td>
+                    <td>@usuario.FechaRegistro</td>
+                    <td>
+                    <button class="btn btn-primary btn-sm" @onclick="(() => Editar(usuario.Id))"><i class="oi oi-pencil"></i></button>
+                    <button class="btn btn-danger btn-sm ms-2" @onclick="(() => Eliminar(usuario.Id))"> <i class="oi oi-trash"></i></button>
+                    </td>
+                </tr>
+            
+            }
+        }
+        
+    </tbody>
+</table>
+
+
+@code {
+    private List<Usuario> _usuario;
+    protected override async Task OnInitializedAsync()
+    {
+        _usuario = await Http.GetFromJsonAsync<List<Usuario>>("/api/Usuario/Lista");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        await Http.DeleteAsync($"/api/Usuario/Eliminar/{id}");
+        _usuario = await Http.GetFromJsonAsync<List<Usuario>>("/api/Usuario/Lista");
+        StateHasChanged();
+    }
+
+    private void Editar(int id)
+    {
+        Navigation.NavigateTo($"/usuario/edit/{id}");
+    }
+
+    private void Crear()
+    {
+        Navigation.NavigateTo("/usuario/create/");
+    }
+}

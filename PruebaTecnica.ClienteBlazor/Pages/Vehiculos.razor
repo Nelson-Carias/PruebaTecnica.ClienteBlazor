@@ -1,0 +1,46 @@
+﻿@page "/vehiculos"
+
+@using PruebaTecnica.ClienteBlazor.Models;
+@using PruebaTecnica.ClienteBlazor.Services;
+@inject IVehiculoService VehiculoService;
+
+<MudText Typo="Typo.h4">Catalogo Vehiculos</MudText>
+<br />
+@if(vehiculos == null)
+{
+    <tr>
+        <td colspan="5" align="center">
+            <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+        </td>
+    </tr>
+}
+else
+{
+    <MudGrid>
+        @foreach(var item in vehiculos)
+        {
+            <MudItem xs="12" sm="10" md="6" lg="4">
+                <MudCard Width="100%" Height="100%" Class="d-flex flex-column">
+                    <MudCardContent>
+                        <img src="@item.Imagen" alt="Modelo: @item.Nombre"  Elevation="25" class="rounded-lg" width="100%" height="200">
+                    </MudCardContent>
+                        <MudCardContent>
+                            <MudText Variant="Typo.h6"><b>@item.Nombre</b></MudText>
+                            <br>
+                            <MudText Typo="Typo.body2"><b>Año: </b> @item.Año</MudText>
+                            <MudText Variant="Typo.body1"><b>Descripción:</b> @item.Descripcion</MudText>
+                            <MudText Typo="Typo.body2"><b>Precio: </b>  @item.Precio</MudText>
+                        </MudCardContent>
+                 </MudCard>              
+            </MudItem> 
+        }
+    </MudGrid>
+}
+
+@code {
+    IEnumerable<Vehiculo> vehiculos = new List<Vehiculo>();
+    protected override async Task OnInitializedAsync()
+    {
+        vehiculos  = await VehiculoService.GetAll();
+    }
+}
